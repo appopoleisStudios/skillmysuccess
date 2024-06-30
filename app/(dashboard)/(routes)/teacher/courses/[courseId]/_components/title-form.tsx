@@ -76,7 +76,7 @@ export const TitleForm = ({
                             <Pencil className="h-4 w-4 mr-2" />
                             Edit Title
                         </>
-                    )};
+                    )}
                 </Button>
             </div>
             {!isEditing && (

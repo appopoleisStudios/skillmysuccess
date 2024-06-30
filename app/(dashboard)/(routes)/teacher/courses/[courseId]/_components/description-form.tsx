@@ -21,6 +21,12 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
+import { Course } from "@prisma/client";
+
+interface DescriptionFormProps {
+    initialData: Course; 
+    courseId: string;
+};
 
 const formSchema = z.object({
     description: z.string().min(1, {
@@ -28,12 +34,6 @@ const formSchema = z.object({
     }),
 });
 
-interface DescriptionFormProps {
-    initialData: {
-        description: string;
-    };
-    courseId: string;
-};
 
 export const DescriptionForm = ({
     initialData,
@@ -47,7 +47,9 @@ export const DescriptionForm = ({
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: {
+            description: initialData.description || "",
+        }
     });
 
     const { isSubmitting, isValid } = form.formState;
@@ -76,9 +78,9 @@ export const DescriptionForm = ({
                     ): (
                         <>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Edit Description
+                                Edit Description
                         </>
-                    )};
+                    )}
                 </Button>
             </div>
             {!isEditing && (
