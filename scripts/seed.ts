@@ -4,7 +4,6 @@ const database = new PrismaClient();
 
 async function main() {
     const categoriesToAdd = [
-        { name: "Computer Science" },
         { name: "Digital Marketing" },
         { name: "Programming" },
         { name: "Design" },
