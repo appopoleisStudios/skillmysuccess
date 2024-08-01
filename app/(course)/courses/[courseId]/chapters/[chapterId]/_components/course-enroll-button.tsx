@@ -25,9 +25,9 @@ export const CourseEnrollButton = ({
       amount: price * 100,
       redirectUrl:
         "http://localhost:3000/courses/9bd14000-e899-4db1-99b2-7af12d398455/chapters/b472dc01-ef6e-48f5-b89f-4f36a9f9b1b4",
-      redirectMode: "REDIRECT",
+      redirectMode: "POST",
       callbackUrl:
-        "http://localhost:3000/courses/9bd14000-e899-4db1-99b2-7af12d398455/chapters/b472dc01-ef6e-48f5-b89f-4f36a9f9b1b4",
+        "http://localhost:3000/api/status/MT7850590068188104",
       mobileNumber: "9999999999",
       paymentInstrument: {
         type: "PAY_PAGE",
