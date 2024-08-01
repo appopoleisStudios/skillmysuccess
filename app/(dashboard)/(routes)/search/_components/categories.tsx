@@ -13,7 +13,7 @@ import { IconType } from "react-icons";
 import { CategoryItem } from "./category-item";
 
 interface CategoriesProps {
-    items: Category
+    items: Category[]
 }
 
 const iconMap: Record<Category["name"], IconType> = {
@@ -28,7 +28,7 @@ export const Categories = ({
 }: CategoriesProps) => {
     return (
         <div className="flex items-center gap-x-2 overflow-x-auto pb-2">
-            {items.map((item) => (
+            {Array.isArray(items) && items?.map((item) => (
                 <CategoryItem 
                     key={item.id}
                     label={item.name}

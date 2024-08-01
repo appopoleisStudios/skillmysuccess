@@ -12,6 +12,13 @@ import { Course } from "@prisma/client";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
 
+
+interface Attachment {
+    Id: string;
+    id: string;
+    name: string;
+    url: string;
+}
 interface AttachmentFormProps {
     initialData: Course & {attachments: Attachment[] }
     courseId: string;

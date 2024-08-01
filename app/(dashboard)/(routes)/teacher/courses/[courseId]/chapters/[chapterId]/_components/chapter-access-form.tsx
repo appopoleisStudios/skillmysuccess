@@ -33,7 +33,7 @@ interface ChapterAccessFormProps {
 };
 
 const formSchema = z.object({
-    isFree: z.boolean(false),
+    isFree: z.boolean(),
 });
 
 
