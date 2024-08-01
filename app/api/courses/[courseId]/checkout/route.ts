@@ -2,8 +2,6 @@ import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import PhonepeGateway from "phonepepg";
-
 export async function POST(
     req: Request,
     { params }: { params: { courseId: string; }}
