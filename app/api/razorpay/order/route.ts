@@ -1,0 +1,34 @@
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import Razorpay from "razorpay";
+
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
+
+export async function POST(req: Request) {
+  try {
+    const { userId } = auth();
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const data = await req.json();
+    const orderReq = await instance.orders.create({
+      amount: data.price * 100,
+      currency: "INR",
+      receipt: "receipt#1",
+      partial_payment: false,
+      notes: {
+        userId : userId,
+        courseId : data.courseId
+      },
+    });
+    return new NextResponse(JSON.stringify({orderReq}), {status: 200});
+  } catch (error) {
+    console.log("[Status]", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
