@@ -21,36 +21,44 @@ export const CourseEnrollButton = ({
   const [Razorpay] = useRazorpay();
 
   const handlePayment = (orderId: string) => {
-    const options: any = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
-      amount: price * 100,
-      currency: "INR",
-      name: "SkillMySuccess",
-      description: "Test Transaction",
-      order_id: orderId,
-      prefill: {
-        name: "Arsalan",
-        email: "youremail@example.com",
-        contact: "9999999999",
-      },
-    };
-
-    const rzp1 = new Razorpay(options);
-    rzp1.on("payment.failed", function (response : any) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
-    });
-
-    rzp1.on("payment.success", async function (response: any) {
-      console.log(response)
-    })
+    try {
+      const options: any = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        amount: price * 100,
+        currency: "INR",
+        name: "SkillMySuccess",
+        description: "Test Transaction",
+        order_id: orderId,
+        handler: function (response : any) {
+          console.log(response)
+          // api call after success
+        },
+        prefill: {
+          name: "Arsalan",
+          email: "youremail@example.com",
+          contact: "9999999999",
+        },
+      };
   
-    rzp1.open();
+      const rzp1 = new Razorpay(options);
+      rzp1.on("payment.failed", function (response : any) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+      });
+  
+      rzp1.on("payment.success", async function (response: any) {
+        console.log(response)
+      })
+    
+      rzp1.open();
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   const handlePay = async () => {
@@ -60,6 +68,7 @@ export const CourseEnrollButton = ({
         courseId,
       });
       if (res.status === 200) {
+        console.log(res.data)
         handlePayment(res.data.orderReq.id);
       }
     } catch (error) {
