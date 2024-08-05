@@ -23,7 +23,7 @@ export const CourseEnrollButton = ({
   const handlePayment = (orderId: string) => {
     try {
       const options: any = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID,
         amount: price * 100,
         currency: "INR",
         name: "SkillMySuccess",
