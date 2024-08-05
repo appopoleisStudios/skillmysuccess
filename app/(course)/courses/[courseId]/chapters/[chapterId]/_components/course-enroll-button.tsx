@@ -5,6 +5,8 @@ import { formatPrice } from "@/lib/format";
 import axios from "axios";
 import sha256 from "crypto-js/sha256";
 import { useRouter } from "next/navigation";
+import useRazorpay from "react-razorpay";
+import { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 interface CourseEnrollButtonProps {
   price: number;
@@ -16,61 +18,62 @@ export const CourseEnrollButton = ({
   courseId,
 }: CourseEnrollButtonProps) => {
   const router = useRouter();
+  const [Razorpay] = useRazorpay();
 
-  const handlePay = () => {
-    const opt = {
-      merchantId: "PGTESTPAYUAT86",
-      merchantTransactionId: "MT7850590068188104",
-      merchantUserId: "MUID123",
-      amount: price * 100,
-      redirectUrl:
-        "http://localhost:3000/courses/9bd14000-e899-4db1-99b2-7af12d398455/chapters/b472dc01-ef6e-48f5-b89f-4f36a9f9b1b4",
-      redirectMode: "POST",
-      callbackUrl:
-        "http://localhost:3000/api/status/MT7850590068188104",
-      mobileNumber: "9999999999",
-      paymentInstrument: {
-        type: "PAY_PAGE",
-      },
-    };
-    const dataPayload = JSON.stringify(opt);
-
-    const dataBase64 = Buffer.from(dataPayload).toString("base64");
-    let string =
-      dataBase64 + "/pg/v1/pay" + "96434309-7796-489d-8924-ab56988a6076";
-    let sha256_val = sha256(string);
-    let xVerifyChecksum = sha256_val + "###" + "1";
-    const options = {
-      method: "post",
-      url: "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay",
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "X-VERIFY": xVerifyChecksum,
-      },
-      data: JSON.stringify(opt),
-    };
-    axios
-      .post(
-        options.url,
-        {
-          request: dataBase64,
+  const handlePayment = (orderId: string) => {
+    try {
+      const options: any = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+        amount: price * 100,
+        currency: "INR",
+        name: "SkillMySuccess",
+        description: "Test Transaction",
+        order_id: orderId,
+        handler: function (response : any) {
+          console.log(response)
+          // api call after success
         },
-        {
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-            "X-VERIFY": xVerifyChecksum,
-          },
-        }
-      )
-      .then(function (response) {
-        const url = response.data.data.instrumentResponse.redirectInfo.url;
-        router.push(url);
-      })
-      .catch(function (error) {
-        console.error(error);
+        prefill: {
+          name: "Arsalan",
+          email: "youremail@example.com",
+          contact: "9999999999",
+        },
+      };
+  
+      const rzp1 = new Razorpay(options);
+      rzp1.on("payment.failed", function (response : any) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
       });
+  
+      rzp1.on("payment.success", async function (response: any) {
+        console.log(response)
+      })
+    
+      rzp1.open();
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+  const handlePay = async () => {
+    try {
+      const res = await axios.post("/api/razorpay/order", {
+        price,
+        courseId,
+      });
+      if (res.status === 200) {
+        console.log(res.data)
+        handlePayment(res.data.orderReq.id);
+      }
+    } catch (error) {
+      console.log(error)
+    }
   };
 
   return (
