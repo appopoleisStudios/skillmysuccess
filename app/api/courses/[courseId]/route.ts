@@ -3,10 +3,10 @@ import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const { video } = new Mux(
-    process.env.MUX_TOKEN_ID,
-    process.env.MUX_TOKEN_SECRET,
-);
+const video = new Mux({
+    tokenId: process.env['MUX_TOKEN_ID'], // This is the default and can be omitted
+    tokenSecret: process.env['MUX_TOKEN_SECRET'], // This is the default and can be omitted
+  });
 
 export async function DELETE(
     req: Request,
@@ -39,7 +39,7 @@ export async function DELETE(
 
         for (const chapter of course.chapters) {
             if (chapter.muxData) {
-                await video.assets.delete(chapter.muxData.assetId);
+                await video.delete(chapter.muxData.assetId);
                 console.log("Deleted Asset", chapter.muxData.assetId);
             }
         };

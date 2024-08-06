@@ -15,7 +15,7 @@ const colorByVariant = {
 
 const sizeByVariant = {
     default: "text-sm",
-    success: "text-xs",
+    sm: "text-xs",
 }
 
 export const CourseProgress = ({

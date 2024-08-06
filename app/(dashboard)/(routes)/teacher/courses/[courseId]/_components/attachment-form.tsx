@@ -8,17 +8,9 @@ import { File, ImageIcon, Loader2, Pencil, PlusCircle, X } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { Course } from "@prisma/client";
+import { Attachment, Course } from "@prisma/client";
 import Image from "next/image";
 import { FileUpload } from "@/components/file-upload";
-
-
-interface Attachment {
-    Id: string;
-    id: string;
-    name: string;
-    url: string;
-}
 interface AttachmentFormProps {
     initialData: Course & {attachments: Attachment[] }
     courseId: string;
@@ -107,7 +99,7 @@ export const AttachmentForm = ({
                                                 <Loader2 className="h-4 w-4 animate-spin" />
                                             </div>
                                         )}
-                                        {deletingId !== attachment.Id && (
+                                        {deletingId !== attachment.id && (
                                             <button 
                                                 onClick={() => onDelete(attachment.id)}    
                                                 className="ml-auto hover:opacity-75 transition"

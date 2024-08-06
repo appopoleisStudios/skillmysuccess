@@ -4,15 +4,15 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 // Ensure environment variables are loaded
-// if (!process.env.MUX_TOKEN_ID || !process.env.MUX_TOKEN_SECRET) {
-//     throw new Error("MUX_TOKEN_ID and MUX_TOKEN_SECRET must be set");
-// }
+if (!process.env.MUX_TOKEN_ID || !process.env.MUX_TOKEN_SECRET) {
+    throw new Error("MUX_TOKEN_ID and MUX_TOKEN_SECRET must be set");
+}
 
 // Instantiate the Mux client
-const muxClient = new Mux(
-    process.env.MUX_TOKEN_ID,
-    process.env.MUX_TOKEN_SECRET,
-);
+const muxClient = new Mux({
+    tokenId: process.env['MUX_TOKEN_ID'],
+    tokenSecret: process.env['MUX_TOKEN_SECRET'],
+});
 
 export async function DELETE(
     req: Request,

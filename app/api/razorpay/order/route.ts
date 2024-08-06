@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 
 var instance = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID,
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID!,
   key_secret: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
 });
 
