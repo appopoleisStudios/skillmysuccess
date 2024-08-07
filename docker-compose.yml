@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      NEXT_PUBLIC_RAZORPAY_SECRET_ID: ${NEXT_PUBLIC_RAZORPAY_SECRET_ID}
+      NEXT_PUBLIC_RAZORPAY_KEY: ${NEXT_PUBLIC_RAZORPAY_KEY}
+    env_file:
+      - .env
+    command: npm run dev
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    env_file:
+      - .env
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
