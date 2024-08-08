@@ -9,8 +9,8 @@ if (!process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID || !process.env.NEXT_PUBLIC_RAZO
 }
 
 var instance = new Razorpay({
-  key_id: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID,
-  key_secret: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID!,
+  key_secret: process.env.NEXT_PUBLIC_RAZORPAY_KEY!,
 });
 
 export async function POST(req: Request) {
@@ -28,10 +28,11 @@ export async function POST(req: Request) {
       partial_payment: false,
       notes: {
         userId: userId,
-        courseId: data.courseId,
+        courseId: data.courseId
       },
     });
-    return new NextResponse(JSON.stringify({ orderReq }), { status: 200 });
+
+    return new NextResponse(JSON.stringify({ orderReq, userId, courseId: data.courseId }), { status: 200 });
   } catch (error) {
     console.log("[Status]", error);
     return new NextResponse("Internal Server Error", { status: 500 });

@@ -3,11 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { formatPrice } from "@/lib/format";
 import axios from "axios";
-import sha256 from "crypto-js/sha256";
 import { useRouter } from "next/navigation";
 import useRazorpay from "react-razorpay";
-import { useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
 interface CourseEnrollButtonProps {
   price: number;
   courseId: string;
@@ -19,8 +19,9 @@ export const CourseEnrollButton = ({
 }: CourseEnrollButtonProps) => {
   const router = useRouter();
   const [Razorpay] = useRazorpay();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handlePayment = (orderId: string) => {
+  const handlePayment = (orderId: string, userId: string, courseId: string) => {
     try {
       const options: any = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_SECRET_ID,
@@ -29,9 +30,23 @@ export const CourseEnrollButton = ({
         name: "SkillMySuccess",
         description: "Test Transaction",
         order_id: orderId,
-        handler: function (response : any) {
-          console.log(response)
-          // api call after success
+        handler: async function (response: any) {
+          console.log(response);
+          // API call after success
+          try {
+            await axios.post("/api/razorpay/purchase", {
+              userId,
+              courseId,
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature,
+            });
+            toast.success("Payment successful!");
+            router.refresh(); // Refresh page or redirect after success
+          } catch (error) {
+            toast.error("Failed to save payment data");
+            console.error(error);
+          }
         },
         prefill: {
           name: "Arsalan",
@@ -41,7 +56,7 @@ export const CourseEnrollButton = ({
       };
   
       const rzp1 = new Razorpay(options);
-      rzp1.on("payment.failed", function (response : any) {
+      rzp1.on("payment.failed", function (response: any) {
         alert(response.error.code);
         alert(response.error.description);
         alert(response.error.source);
@@ -51,33 +66,37 @@ export const CourseEnrollButton = ({
         alert(response.error.metadata.payment_id);
       });
   
-      rzp1.on("payment.success", async function (response: any) {
-        console.log(response)
-      })
-    
       rzp1.open();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
   const handlePay = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.post("/api/razorpay/order", {
         price,
         courseId,
       });
       if (res.status === 200) {
-        console.log(res.data)
-        handlePayment(res.data.orderReq.id);
+        const { orderReq, userId, courseId } = res.data;
+        if (orderReq && userId && courseId) {
+          handlePayment(orderReq.id, userId, courseId);
+        } else {
+          toast.error("Failed to retrieve order details");
+        }
       }
     } catch (error) {
-      console.log(error)
+      toast.error("Something went wrong");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Button size="sm" onClick={handlePay} className="w-full md:w-auto">
+    <Button size="sm" onClick={handlePay} className="w-full md:w-auto" disabled={isLoading}>
       Enroll for {formatPrice(price)}
     </Button>
   );
