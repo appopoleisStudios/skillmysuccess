@@ -8,7 +8,7 @@ cd /home/ubuntu/projects/skillmysuccess/skillmysuccess
 git stash -u
 
 # Pull the latest changes from GitHub
-git pull origin main  # Or your branch
+git pull origin staging  # Or your branch
 
 # Rebuild and restart Docker containers
 docker-compose down
