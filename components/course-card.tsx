@@ -3,6 +3,7 @@ import Link from "next/link";
 import { IconBadge } from "./icon-badge";
 import { BookOpen } from "lucide-react";
 import { formatPrice } from "@/lib/format";
+import { CourseProgress } from "./course-progress";
 
 interface CourseCardProps {
     id: string;
@@ -10,7 +11,7 @@ interface CourseCardProps {
     imageUrl: string;
     chaptersLength: number;
     price: number;
-    progress: number | null;
+    progress: number | null ;
     category: string;
 }
 
@@ -23,6 +24,12 @@ export const CourseCard = ({
     progress,
     category,
 }: CourseCardProps) => {
+    // Ensure progress is a valid number
+    const validProgress = typeof progress === 'number' && !isNaN(progress) ? progress : 0;
+    
+    console.log("Original progress:", progress); // Logs the raw progress value
+    console.log("Sanitized validProgress:", validProgress); // Logs the sanitized value
+
     return (
         <Link href={`courses/${id}`}>
             <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
@@ -49,18 +56,19 @@ export const CourseCard = ({
                             </span>
                         </div>
                     </div>
-                    {progress != null ? (
-                        <div>
-                            TODO: Progress Component
-                        </div>
+                    {progress !== null ? (
+                        <CourseProgress
+                            variant={validProgress === 100 ? "success" : "default"}
+                            size="sm"
+                            value={validProgress}
+                        />
                     ) : (
                         <p className="text-md md:text-sm font-medium text-slate-700">
                             {formatPrice(price)}
                         </p>
-                        
                     )}
                 </div>
             </div>
         </Link>
-    )
-}
+    );
+};

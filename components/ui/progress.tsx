@@ -26,24 +26,26 @@ VariantProps<typeof progressVariants> {}
 
 type CombinedProgressProps = ProgressProps & React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  CombinedProgressProps
->(({ className, value, variant, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className={cn(progressVariants({ variant }))}
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
+const Progress = React.forwardRef<React.ElementRef<typeof ProgressPrimitive.Root>, CombinedProgressProps>(({ className, value, variant, ...props }, ref) => {
+  console.log("Progress component value:", value); // Debugging log
+
+  return (
+    <ProgressPrimitive.Root
+      ref={ref}
+      className={cn(
+        "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
+        className
+      )}
+      {...props}
+    >
+      <ProgressPrimitive.Indicator
+        className={cn(progressVariants({ variant }))}
+        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
+      />
+    </ProgressPrimitive.Root>
+  );
+});
+
 Progress.displayName = ProgressPrimitive.Root.displayName
 
 export { Progress }
