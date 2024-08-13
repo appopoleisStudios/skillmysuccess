@@ -17,6 +17,11 @@ export const getProgress = async (
 
         const publishedChapterIds = publishedChapters.map((chapter) => chapter.id);
 
+        // If there are no published chapters, return 0% progress
+        if (publishedChapterIds.length === 0) {
+            return 0;
+        }
+
         const validCompletedChapters = await db.userProgress.count({
             where: {
                 userId: userId,
@@ -27,9 +32,11 @@ export const getProgress = async (
             }
         });
 
+        // Calculate progress percentage
         const progressPercentage = (validCompletedChapters / publishedChapterIds.length) * 100;
 
-        return progressPercentage;
+        // Ensure a valid number is returned
+        return isNaN(progressPercentage) ? 0 : progressPercentage;
 
     } catch (error) {
         console.log("[Get_Progress]", error);

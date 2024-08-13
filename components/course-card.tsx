@@ -24,7 +24,12 @@ export const CourseCard = ({
     progress,
     category,
 }: CourseCardProps) => {
-    console.log("CourseCard progress:", progress); // Debugging log
+    // Ensure progress is a valid number
+    const validProgress = typeof progress === 'number' && !isNaN(progress) ? progress : 0;
+    
+    console.log("Original progress:", progress); // Logs the raw progress value
+    console.log("Sanitized validProgress:", validProgress); // Logs the sanitized value
+
     return (
         <Link href={`courses/${id}`}>
             <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
@@ -53,18 +58,17 @@ export const CourseCard = ({
                     </div>
                     {progress !== null ? (
                         <CourseProgress
-                            variant={progress === 100 ? "success" : "default"}
+                            variant={validProgress === 100 ? "success" : "default"}
                             size="sm"
-                            value={typeof progress === 'number' && !isNaN(progress) ? progress : 0}
+                            value={validProgress}
                         />
                     ) : (
                         <p className="text-md md:text-sm font-medium text-slate-700">
                             {formatPrice(price)}
                         </p>
-                        
                     )}
                 </div>
             </div>
         </Link>
-    )
-}
+    );
+};

@@ -19,7 +19,7 @@ const sizeByVariant = {
 }
 
 export const CourseProgress = ({
-    value = 0,
+    value,
     variant,
     size
 }: CourseProgressProps) => {
