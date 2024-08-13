@@ -19,10 +19,13 @@ const sizeByVariant = {
 }
 
 export const CourseProgress = ({
-    value,
+    value = 0,
     variant,
     size
 }: CourseProgressProps) => {
+    const numericValue = Number(value);
+    console.log("CourseProgress value:", value);
+
     return (
         <div>
             <Progress 
@@ -34,9 +37,8 @@ export const CourseProgress = ({
                 "font-medium mt-2 text-sky-700",
                 colorByVariant[variant || "default"],
                 sizeByVariant[size || "default"],
-
             )}>
-                {Math.round(value)}% Complete
+                {Math.round(numericValue)}% Complete
             </p>
         </div>
     )
