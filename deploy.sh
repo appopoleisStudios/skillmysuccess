@@ -6,17 +6,12 @@ chmod +x deploy.sh
 # Navigate to the project directory
 cd /home/ubuntu/projects/skillmysuccess/skillmysuccess
 
-# Stash local changes
-git stash -u
-
-# Pull the latest changes from GitHub
-git pull origin staging  # Or your branch
+# Reset local branch to match the remote branch, discarding any local changes
+git fetch origin
+git reset --hard origin/staging
 
 # Rebuild and restart Docker containers
 docker-compose down
 docker-compose up --build -d
-
-# Apply the stashed changes (optional)
-git stash pop  # Reapplies stashed changes
 
 echo "Deployment completed successfully!"
