@@ -24,7 +24,6 @@ export const CourseProgress = ({
     size
 }: CourseProgressProps) => {
     const numericValue = Number(value);
-    console.log("CourseProgress value:", value);
 
     return (
         <div>

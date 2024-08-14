@@ -26,9 +26,6 @@ export const CourseCard = ({
 }: CourseCardProps) => {
     // Ensure progress is a valid number
     const validProgress = typeof progress === 'number' && !isNaN(progress) ? progress : 0;
-    
-    console.log("Original progress:", progress); // Logs the raw progress value
-    console.log("Sanitized validProgress:", validProgress); // Logs the sanitized value
 
     return (
         <Link href={`courses/${id}`}>
