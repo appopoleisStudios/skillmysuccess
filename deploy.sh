@@ -1,11 +1,10 @@
-ubuntu@vps-38929c8c:~/projects/skillmysuccess/skillmysuccess$ cat deploy.sh
 #!/bin/bash
 
 # Ensure this script is executable
 chmod +x deploy.sh
 
 # Navigate to the project directory
-# cd /home/ubuntu/projects/skillmysuccess/skillmysuccess
+cd /home/ubuntu/projects/skillmysuccess/skillmysuccess
 
 # Stash local changes
 git stash -u
